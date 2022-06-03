@@ -1,26 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import styles from "./App.module.css";
+import robots from "./mockdata/robots.json";
+import Robot from "./components/Robot";
+import ShoppingCart from "./components/ShoppingCart";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+interface Props {}
+interface State {
+  robotGallery: any;
+}
+
+class App extends React.Component<Props, State> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      robotGallery: [],
+    };
+  }
+
+  componentDidMount() {
+    fetch("https://jsonplaceholder.typicode.com/users").then((response) =>
+      response.json()
+    ).then(data=>this.setState({robotGallery:data}));
+  }
+
+  render() {
+    return (
+      <div className={styles.app}>
+        <div className={styles.appHeader}>
+          <h1>罗伯特机器人炫酷吊炸天online 购物平台</h1>
+        </div>
+
+        <ShoppingCart />
+
+        <div className={styles.robotList}>
+          {this.state.robotGallery.map((robots) => (
+            <Robot id={robots.id} email={robots.email} name={robots.name} />
+          ))}
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;
